@@ -41,7 +41,7 @@ function wpb_post_meta_filter( $post_meta ) {
 		$primary_category['slug'] = $category_slug;
 		$primary_category['title'] = $category_display;
 	}
-	
+	//display linked category name
     $post_meta = '<a href="' . $category_link;
     $post_meta .= '" title= "' . $category_display;
     $post_meta .= '">' . $category_display;
