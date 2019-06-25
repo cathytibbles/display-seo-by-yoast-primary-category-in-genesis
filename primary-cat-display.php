@@ -1,10 +1,19 @@
+<?php
+/**
+ * Primary Category Shortcode
+ *
+ * @package      Child Theme Core Plugin
+ * @author       Cathy Tibbles
+ * @since        1.0.0
+ * @license      GPL-2.0+
+ * use shortcode [primary_category], no attributes yet
+ *
+**/
 
-//add this snippet to child theme functions or core plugin
 
-//use regular genesis post meta filter
-add_filter( 'genesis_post_meta', 'wpb_post_meta_filter' );
-function wpb_post_meta_filter( $post_meta ) {
+add_shortcode( 'primary_category', 'wpb_primary_category' );
 
+function wpb_primary_category() {
 	$category = get_the_category( $post );
 	$primary_category = array();
 	
@@ -15,24 +24,24 @@ function wpb_post_meta_filter( $post_meta ) {
 	
 		if ( class_exists('WPSEO_Primary_Term') )
 		{
-			// Show the post's 'Primary' category, if this Yoast feature is available, & one is set
+			// show primary category, if one exists
 			$wpseo_primary_term = new WPSEO_Primary_Term( 'category', $post );
 			$wpseo_primary_term = $wpseo_primary_term->get_primary_term();
 			$term = get_term( $wpseo_primary_term );
 			if (is_wp_error($term)) {
-				// If error, use first category
+				// if error, return first category
 				$category_display = $category[0]->name;
 				$category_slug = $category[0]->slug;
 				$category_link = get_category_link( $category[0]->term_id );
 			} else {
-				// Yoast Primary category
+				// else Yoast Primary category
 				$category_display = $term->name;
 				$category_slug = $term->slug;
 				$category_link = get_category_link( $term->term_id );
 			}
 		}
 		else {
-			// Default, display the first category in WP's list of assigned categories
+			// if no primary terms available, show first category
 			$category_display = $category[0]->name;
 			$category_slug = $category[0]->slug;
 			$category_link = get_category_link( $category[0]->term_id );
@@ -41,10 +50,12 @@ function wpb_post_meta_filter( $post_meta ) {
 		$primary_category['slug'] = $category_slug;
 		$primary_category['title'] = $category_display;
 	}
-	//display linked category name
-    $post_meta = '<a href="' . $category_link;
-    $post_meta .= '" title= "' . $category_display;
-    $post_meta .= '">' . $category_display;
-    $post_meta .='</a>';
-	return $post_meta;   
+	
+  //display linked category name
+    $prim_cat = '<a href="' . $category_link;
+    $prim_cat .= '" title= "' . $category_display;
+    $prim_cat .= '">' . $category_display;
+    $prim_cat .='</a>';
+	
+	return $prim_cat;   
 }
